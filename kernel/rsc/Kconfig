@@ -1,0 +1,298 @@
+#
+# VIVO	 Resource Control config, call RSC
+#
+
+config RSC_V2
+	bool "VIVO Resource Control"
+	default y
+	help
+	  This will enable VIVO Resource Control.
+
+config RSC_CGROUP
+        bool "RSC cgroup"
+        depends on RSC_V2
+        default y
+        help
+          If you say Y here, support will be enable resource control cgroup.
+
+config RSC_V2_CPU_CAP_NOTIFY
+        bool "RSC CPU capability notify Config"
+        depends on RSC_V2
+        default y
+        help
+          If you say Y here, support will be enable cpu capability notify.
+
+config RSC_TASK_CPU_USAGE
+        bool "RSC task cpu usage Config"
+        depends on RSC_V2
+        default y
+        help
+          If you say Y here, support will be enable task cpu usage.
+
+config RSC_UID_IO
+        bool "RSC uid io Config"
+        depends on RSC_V2
+        default y
+        help
+          If you say Y here, support will be enable stat io by uid.
+
+config RSC_CPU_TOP
+        bool "RSC feed back process cpu usage"
+        depends on RSC_V2
+        default y
+        help
+          If you say Y here, support will feed back cpu usage, replay top command.
+
+config RSC_IOLIMIT
+        bool "RSC limit io by cgroup"
+        depends on RSC_V2 && BLK_CGROUP
+        default y
+        help
+          If you say Y here, support will limit io.
+
+config RSC_MEM_MON
+        bool "RSC monitor memory"
+        depends on RSC_V2 && RSC_CGROUP
+        default y
+        help
+          If you say Y here, support will monitor memory.
+
+config RSC_MEM_PRIORITY
+        bool "RSC memory priority"
+        depends on RSC_V2 && RSC_MEM_MON
+        default y
+        help
+          If you say Y here, it will enable memory slowpath wait and backgroup wartermark.
+
+config RSC_ZRAM
+        bool "control zram compress"
+        depends on RSC_V2 && RSC_V2_CPU_CAP_NOTIFY && RSC_BINDER_OPTIMIZATION
+        default y
+        help
+          If you say Y here, it will enable control zram compress.
+
+config RSC_ZRAM_SWAPPINESS
+        bool "control zram swappiness for kswapd"
+        depends on RSC_V2
+        default y
+        help
+          If you say Y here, it will use zram swappiness, currently it is for kswapd.
+
+config RSC_MEM_STAT
+        bool "stat mem usage"
+        depends on RSC_V2
+        default y
+        help
+          If you say Y here, stat mem usage in /proc/meminfo.
+
+config RSC_FAST_PAGERECLAIM
+        bool "fast reclaim page"
+        depends on RSC_V2
+        default y
+        help
+          If you say Y here, quickly reclaim page.
+
+config RSC_MEM_DEFRAG
+        bool "reduce memory fragment"
+        depends on RSC_MEM_MON
+        default y
+        help
+          If you say Y here, it will enable this feature.
+
+config RSC_ISOLATE_SORD_SIZE_MB
+        int "reserve mem for anti memory fragmentation"
+		depends on RSC_MEM_DEFRAG
+		default 0
+        help
+          If you say Y here, it will enable this feature.
+
+config RSC_ISOLATE_BORD_SIZE_MB
+        int "reserve mem for anti memory fragmentation"
+		depends on RSC_MEM_DEFRAG
+		default 0
+        help
+          If you say Y here, it will enable this feature.
+
+config RSC_BINDER_OPTIMIZATION
+        boolean "limit binder"
+		depends on RSC_V2 && RSC_V2_CPU_CAP_NOTIFY && RSC_TASK_CPU_USAGE
+		default y
+        help
+          If you say Y here, it will enable this feature.
+config RSC_BOOST_TASKKILL
+        bool "RSC speedup task exit"
+        default n
+        help
+          If you say Y here, support will speedup task exit.
+
+config RSC_MON_CPU_HOTPLUG
+        bool "RSC monitor cpu hotplug fail information"
+        depends on RSC_V2
+        default y
+        help
+          If you say Y here, support will support monitor cpu hotplug infor.
+
+config RSC_BINDER_EVENT_NOTI
+	boolean "RSC binder event notify app"
+	depends on RSC_V2
+	default y
+	help
+	  If you say Y here, binder event notify app by sysfs will be supported.
+
+config RSC_FIX_CPU_HOTPLUG_FAIL
+        bool "RSC fix cpu hotplug fail. "
+        depends on RSC_V2 && RSC_MON_CPU_HOTPLUG && PM_SLEEP_SMP
+        default y
+        help
+          If you say Y here, support will fix pem cpu hotplug fail.
+		  
+config RSC_APP_LAUNCH_BOOST
+        bool "app boost. "
+        depends on RSC_V2
+        default y
+        help
+          If you say Y here, support app launch boost.
+
+config RSC_VAUDIT
+        bool "audit the system"
+        depends on RSC_V2
+        default y
+        help
+          If you say Y here, support audit the system.
+
+config RSC_RCU_LOCK_INLINE
+        bool "inline rcu lock"
+        depends on RSC_V2 && PREEMPT_RCU
+        default y
+        help
+          If you say Y here, inline __rcu_read_lock function.
+          It will do not increase code size.
+		  rcu function will use __rcu_read_unlock_inline to inline rcu unlock function.
+          code:  _text(FFFFFF8008080000) to __init_begin (FFFFFF8009C00000) - 1, about 29MB for sdm710
+          data: _sdata(FFFFFF800A000000) to _end(FFFFFF800A765000) - 1, about 8MB for sdm710
+
+config RSC_RCU_UNLOCK_INLINE
+        bool "inline rcu unlock"
+        depends on RSC_V2 && PREEMPT_RCU && RSC_RCU_LOCK_INLINE
+        default n
+        help
+          If you say Y here, inline __rcu_read_unlock function.
+          It will increase about 2MB code size.
+          code: _text to __init_begin - 1
+          data: _sdata to _end - 1
+
+config RSC_FIX_TASK_SUSPEND_DEADLOCK
+        bool "fix HOK ANR issue"
+        depends on RSC_V2
+        default y
+        help
+          If fix HOK ANR issue.
+
+config RSC_SHOW_IO_SCHEDULE_IN_SYSTRACE
+        bool "show io schedule"
+        depends on RSC_V2
+        default y
+        help
+         If you say Y here, show io_schedule in systrace.
+
+config RSC_KSWAPD_FORCE_SLEEP
+        bool "force kswapd sleep"
+        depends on RSC_V2 && RSC_MEM_MON
+        default y
+        help
+         If you say Y here, workround for kswapd running too long issue.
+
+config RSC_DROP_MMAP_SEM_IN_MKWRITE
+        bool "drop mmap_sem lock in mkwrite"
+        depends on RSC_V2 && SPECULATIVE_PAGE_FAULT
+        default y
+        help
+         If you say Y here, opt drop mmap_sem in mkwrite.
+
+config RSC_DROP_MMAP_SEM_DEBUG
+        int "check the mmap sem of the system"
+	depends on RSC_DROP_MMAP_SEM_IN_MKWRITE
+	default 0
+        help
+          If you say Y here, it will enable this feature.
+          1: basic stat info
+          2: some error info, printk output when waitio of foreground task or time > 10ms(default)
+          3: full error info, printk output when waitio of foreground task or time > 10ms(default)
+          4: full info and force printk output
+
+config RSC_OPT_FS_INLINE_DATA_FOR_PAGECACHE
+        bool "optimize fs inline data for pagecache"
+        depends on RSC_V2 && RSC_DROP_MMAP_SEM_IN_MKWRITE
+        default y
+        help
+         If you say Y here, opt fs inline data.
+
+config RSC_DROP_MMAP_SEM_IN_MADVISE
+        bool "drop mmap_sem lock in madvise"
+        depends on RSC_V2 && RSC_DROP_MMAP_SEM_IN_MKWRITE
+        default y
+        help
+         If you say Y here, opt drop mmap_sem in madvise.
+
+config RSC_DROP_MMAP_SEM_IO_DECAY
+        bool "decay io performance"
+        depends on RSC_V2 && RSC_DROP_MMAP_SEM_IN_MKWRITE
+        default y
+        help
+         If you say Y here, this is a debug config, decay io performance.
+
+config RSC_DROP_MMAP_SEM_IN_SHOWMAP
+        bool "drop mmap_sem lock in show_pid_map"
+        depends on RSC_V2 && RSC_DROP_MMAP_SEM_IN_MKWRITE && SPECULATIVE_PAGE_FAULT
+        default y
+        help
+         If you say Y here, opt drop mmap_sem in show_pid_map.
+
+config RSC_KSWAPD_IMPROVE
+        bool "pre reclaim memory"
+        depends on RSC_V2 && RSC_MEM_MON && RSC_ZRAM
+        default y
+        help
+         If you say Y here, pre reclaim memory.
+
+config RSC_FIX_BINDER_PRIORITY_LOSS
+        bool "fix binder offical bug"
+        depends on RSC_V2
+        default y
+        help
+         If you say Y here, fix binder priority loss issue, such as surfaceflinger priority change to cfs 120.
+config RSC_SVP_TASK_SCHEDULE
+        bool "super vip task fast schedule"
+        depends on RSC_V2 && RSC_BINDER_OPTIMIZATION
+        default y
+        help
+          Fix HOK drop frame issue in 6+2 platform,
+          because 3 heavy tasks preempt 2 big cores for each other.
+
+config RSC_LOCK_BOOST
+        bool "This is lock fastpath"
+        depends on RSC_APP_LAUNCH_BOOST && RSC_SVP_TASK_SCHEDULE
+        default y
+        help
+         If you say Y here, improve the lock performance.
+
+config RSC_LOCK_BOOST_FUTEX
+        bool "boost futex"
+        depends on RSC_LOCK_BOOST
+        default y
+        help
+         If you say Y here, improve the futex lock performance.
+
+config RSC_LOCK_BOOST_STAT
+        bool "boost lock stat"
+        depends on RSC_LOCK_BOOST
+        default n
+        help
+         If you say Y here, stat the improve, maybe hit the performance.
+
+config RSC_LOCK_BOOST_TRACK_DEBUG
+        bool "track block point and information, should disable in release version!"
+        depends on RSC_LOCK_BOOST
+        default n
+        help
+         If you say Y here, it will hit performance

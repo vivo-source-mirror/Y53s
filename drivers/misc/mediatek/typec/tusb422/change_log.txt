@@ -1,0 +1,289 @@
+v1.03 - 01Dec2017
+-----------------
+- Fixed transmission of Reject in response to GET SRC CAPS request when configured as UFP-only.
+- Added re-enable for VBUS detection after sink issues Hard Reset.
+- Added support for 3.4V sink disconnect threshold for high-current direct charger.
+- Removed setting of soft TRIM values for pre-production silicon.
+- Added support to ignore programmable supply type when PD3.0 support is not enabled to fix Ellisys TD.PD.SNK3.E14.
+- Fixed debounce timer for TryWait.SRC state to use tTryCCDebounce instead of tCCDebounce.
+- Added compile option to disable SOP" support.
+- Added 3ms delay before VBUS check to improve Type-C to Std-A cable detection.
+- Reduced timings for CC debounce and DRP Try to help pass compliance on platforms with slow VBUS enable.
+- Added support to re-enable VCONN after power role swap.
+- Added workaround to recover Alt-Mode dongle video after power role swap.
+- Fixed handling of messages which interrupt VDM sequences.
+- Added check for DP Alt-mode configurated state before reporting HPD status.
+- Added support for custom Type-C headphone (CONFIG_HIFI_USB).
+- Added workaround to allow connection to non-compliant Kaiboer Alt-Mode dongle.
+
+
+v1.02 - 12Sep2017
+-----------------
+- Added detection of Type-C to Standard-A legacy cables.
+- Added wake lock override function.
+- Added support for Audio Accessory and Sink Debug Accessory connection states to PAL.
+
+
+v1.01 - 07Aug2017
+-----------------
+- Added enable VBUS detect after SNK hard reset if CC pins are open. (Fixed intermittent failure of Ellisys PD.PC.E6)
+- Modified HPD-OUT reporting for DisplayPort Alt-mode to report after mux has been configured.
+- Modified handling of VDM busy response to simplify code. 
+- Added retry mechanism for VDM initiator.
+- Reduced cyclomatic complexity of alert_cc_status_handler() and usb_pd_pe_ctrl_msg_handler().
+- Added support for enabling external VCONN source.
+
+
+v1.00 - 29Jun2017
+-----------------
+- Added SW reset of TUSB422 chip to port init for robustness.
+- Moved IRQ request after TCPM and PD init functions to remove potential for state machines to run before init is complete.
+- Fixed reporting of USB-PD flag when enabling source VBUS.
+- Fixed handling of sender response timeout for sinks to try additional hard resets.
+- Added TUSB422_DELAYED_START option in tusb422_linux.c to allow vendors option to delay processing of first IRQ after probe.
+- Added disable of AutoDischargeDisconnect during SRC->SNK power role swap to support PG2.0 silicon.
+- Added bleed discharge disable after SNK->SRC power role swap.
+- Added disable of PD receive upon disconnect for PG2.x silicon.
+- Added I2C register page set to zero for tusb422_sw_reset() and tusb422_is_present() for robustness.
+
+
+v0.99 - 04May2017
+-----------------
+- Reverted non-PD role swap timeout back to 500ms (changed to 1500ms in v0.98).
+- Added cancellation of VDM timers when receiving control messages while VDM is in-progress.
+- Modified handling of HPD-IN for DP Alt-mode sink.
+
+
+v0.98 - 20Apr2017
+-----------------
+- Reduced tErrorRecovery timeout to from 650ms to 40ms and increased timeout for attempting non-PD role swap from 500ms to 1500ms.  
+- Added 50ms delay in usb_pd_pal_notify_connect_state() for USB PHY init when connected as sink.
+- Moved PD receive enable for SOP from PE_SNK_STARTUP to PE_SNK_WAIT_FOR_CAPS state.
+- Moved IRQ request after workqueue initialization to prevent potential NULL pointer access.
+- Added devm_free_irq() to remove routine to prevent potential NULL pointer access.
+- Added debug prints to tusb422_linux_dual_role.c.
+- Modified tusb422_dual_role_prop_is_writeable() to check dual-role data configuration before returning value.
+- Modified policy engine to handle unattach immediately in connection state handler.
+
+
+v0.97 - 08Apr2017
+-----------------
+- Added handling of Reject when initiating a VCONN swap.
+- Added 1ms delay between sink VBUS enable and notification to upper layers.
+- Modified notification of upper layer for DebugAccessory.SRC until after VBUS has reached vSafe5V.
+- Increased wakelock timeout from 5 sec to 7 sec. (Ellisys SNK.E12)
+
+
+v0.96 - 05Apr2017
+-----------------
+- Fixed kernel panic due to dual-role instance change reported before instance registered.
+- Moved message header info update before DR swap accept to fix intermittent Ellisys VNDI.E5/E6 failure.
+- Modified alert handler to ensure Tx alerts are processed by PD state machine before any pending Rx alert.
+
+
+v0.95 - 29Mar2017
+-----------------
+- Moved sink VBUS disable from hard reset to pe_snk_transition_to_default_entry(). Sink VBUS is re-enabled in pe_snk_wait_for_caps_entry().
+- Moved sink VBUS enable which occurs after SRC->SNK power role swap to occur after PS_RDY message is received. 
+- Removed requirement for vSafe0V when transitioning from Try.SRC to Attached.SRC.
+- Added alt-mode mux control handling during hard reset.
+
+
+v0.94 - 23Mar2017
+-----------------
+- Fixed timing interval between first and second source caps messages sent after reading cable ID.
+- Moved setting of flag for 'PD connected since attach' from SRC_READY or SNK_READY state to first PD message exchange.
+- Fixed 'VDM in progress' flag not cleared after message Tx failure occurs.
+- Fixed sender response timer not cancelled upon reciept of hard reset for sink. (no functional impact)
+- Added handling for protocol errors during interruptable AMS.
+- Try.SRC Only:
+  - Fixed SNK->SRC power role swap when Try.SRC is enabled and we are connected to a device that also enables Try.SRC.
+  - Fixed VCONN not disabled when transitioning from Attached.SRC to TryWait.SNK when Try.SRC. 
+  - Added workaround for CC open status not reported in Try.SRC when VBUS detection is enabled. (Ellisys TD.SNK.Ex tests)
+  - Fixed PD policy engine timers not cancelled when entering TryWait.SNK.
+- Moved CPU idle poll control from work function to IRQ handler.
+
+
+v0.93 - 08Mar2017
+-----------------
+- Fixed issue with removing Rp for VCONN causing incorrect CC pin behavior. (Error introduced in v0.92).
+
+
+v0.92 - 06Mar2017
+-----------------
+- Added TUSB422_KTHREAD compile option to use real-time priority kernel thread instead of high-priority workqueue to process interrupts.
+- Fixed Cable Plug bit incorrectly set in PD header for SOP' packet Tx.
+- Fixed unattach during hard reset not detected with MQP BMC-POW tests. VCONN will always be enabled after source hard reset without checking for Ra.
+- Modified Discover Identity request to cable plug to retry until SourceCapabilityTimer expires instead of using fixed retry count.
+- Removed cable VDO max voltage decode for USB-PD 2.0 since it is not applicable.
+- Fixed SRC->SNK power role swap failure when Try.SNK or Try.SRC flag is set and VBUS detection is enabled before entering Attached.SRC.
+- Reduced delay after SW reset from 2ms to 1ms. 
+
+
+v0.91 - 27Feb2017
+-----------------
+- Updated Type-C state machine for Audio Adapter State Change ECN.
+- Added workaround for VBUS disconnect alert set when threshold is cleared.
+- Changed VBUS stop discharge threshold to use default of vSafe0V when source and updated voltage alarm thresholds accordingly.
+- Added compile option to use kthread instead of workqueue for driver operation.
+- Added cancellation of sender response timer when Wait or Reject is received.
+- Fixed source PD Hard Reset loop condition when sink does not return GoodCRC for first Source Caps message.
+- Fixed VDM Attention request to have no response when the SVID is invalid. (MQP BMC-PROT-DISCOV)
+- Added support to ensure VDM ID Header bits[25:16] are cleared when PD spec revision is 2.0.
+- Modified negative voltage transitions to enable new source before starting force discharge.
+
+
+v0.90 - 18Jan2017
+-----------------
+- Added VDM and DP Alt-Mode support.
+- Modifications to make source code common with MCU code. 
+- Build sink and source caps on request in case parameters change dynamically.
+
+
+v0.89 - 20Dec2016
+-----------------
+- Modified Type-C state machine to wait for vSafe0V before transitioning from AttachWait.SRC to Try.SNK.
+- Fixed potential disconnect during sink power role swap. (Ellisys TD.4.10.4) 
+
+
+v0.88 - 02Dec2016
+-----------------
+- Fixed debounce time to exit TryWait.SRC state. (Ellisys TD.4.7.5)
+- Added support to transition to Unattached.SNK when VBUS falls below 80% of USB-PD negotiated value.
+- Modified VBUS present check to enable VBUS detection.
+- Modified VBUS detection enable to enable VBUS monitoring for PG1.0 silicon only.
+- Restored AutoDischargeDisconnect enable in PE_SNK_WAIT_FOR_CAPS state.
+
+
+v0.87 - 22Nov2016
+-----------------
+- Added re-detection of Ra after a PD Hard Reset before sourcing VCONN.
+- Fixed intermittent disconnect during power role swap. (Ellisys PD.CP.E3)
+
+
+v0.86 - 16Nov2016
+-----------------
+- Disabled interrupt polling by default.
+- Fixed polarity initialization for SRC and SNK power switch enables on EVM.
+- Fixed I2C block write when using non-REGMAP I2C access compile option.
+- Removed mutex lock for non-REGMAP I2C access. 
+- Removed compile option for Level IRQ.
+
+
+v0.85 - 14Nov2016
+-----------------
+- Fixed PDO transistion after power role swap to sink failure. (Ellisys PD.PC.E7)
+- Added state restrictions for policy engine voltage alarm handling to determine VBUS present after hard reset.
+
+
+v0.84 - 08Nov2016
+-----------------
+- Fixed Type-C unattach during PD Hard Reset.
+- Added 10ms delay after VCONN enable before sending PS_RDY during VCONN swap. (LeCroy VCONN swap test)
+- Added check for vSafe0V transition when sink is handling a hard reset.
+- Added I2C mutex.
+
+
+v0.83 - 04Nov2016
+-----------------
+- Disabled unused vendor interrupts.
+- Modified I2C write functions to use synchronous regmap I2C write.  
+- Modified to use polling to pass BIST when there is latency in setting TCPC_CTRL BIST bit. 
+
+
+v0.82 - 02Nov2016
+-----------------
+- Modified alert IRQ to use raw GPIO value to avoid polarity dependancy issues.
+- Removed check for ACTIVE_LOW polarity check for alert GPIO.
+- Modified work function to run Type-C and PD state machines after processing every alert IRQ.
+- Fixed macro typo "PDO_CURR_TO_MA" in policy engine.
+- Fixed function prototype definition for usb_pd_pal_sink_vbus_batt() and usb_pd_pal_sink_vbus_vari() in usb_pd_pal.h.
+- Added support for Linux Dual-Role class.
+
+
+v0.81 - 24Oct2016
+-----------------
+- Fixed handling of CC Open status change while in Try.SRC and TryWait.SRC.
+- Added 20ms delay for VBUS 5V stabilization after vSafe5V-min is reached before sending Source Capabilities.
+- Modified power role swap to source to use the 20ms VBUS 5V stabilization delay instead of user-defined source settling time.
+- Modified policy engine to wait until PS_RDY has been successfully transmitted before transitioning to PE_SRC_READY state.
+- Removed externally powered check when evaluating swap to Sink power role. (Ellisys VNDI.E5)
+
+
+v0.80 - 12Oct2016
+-----------------
+- Fixed behavior for sender response timeout for PE_SNK_SELECT_CAPABILITY and PE_SNK_SEND_SOFT_RESET states.
+- Fixed protocol error handling when receiving invalid message types - Send Reject for PD r2.0.
+- Created common functions for sending Control messages.
+- Delayed start of sender response timer until after GoodCRC is received.
+- Removed extraneous timer cancel from PRL_ALERT_MSG_RECEIVED handler.
+- Fixed setting and clearing non_interruptable_ams flag during Soft Reset.
+- Changed T_DRP_TRY_MS and T_TRY_TIMEOUT_MS timeouts to middle of range.
+
+
+v0.79 - 03Oct2016
+-----------------
+- Fixed Try.SNK exit to TryWait.SRC when source removed after source was previously detected without VBUS.
+- Added support for Type-C SRC to Try.SRC Looping ECN. (TryWait.SNK if no SRC.Rd and vSafe0V or after tTryTimeout)
+- Added support for vSafe0V requirement when exiting Unattached.SRC per USB Type-C v1.2 spec.
+- Removed unnecessary states for Type-C state machine.
+
+
+v0.78 - 28Sep2016
+-----------------
+- Fixed Try.SRC state machine.
+- Added tCCDebounce delay after VBUS reaches vSafe0V before transitioning to Attached.SRC for Try.SRC and TryWait.SRC states.
+- Modified connection state machine to read CC status because CC change might not trigger CC status alert when using Try.SNK or Try.SRC.
+- Modified temporary role swap timeout callback to only reset role to DRP if in unattached state.  (Macbook interop)
+- Modified attached state function to handle canceling of timers.  
+
+
+v0.77 - 27Sep2016
+-----------------
+- Rewrote source capabilities evaluation function to fix PDO selection logic and reduce ROM/RAM usage.
+- Added PAL function skeleton code for handling VBUS sink from variable and battery supplies.
+- Added support for sink GotoMin request.
+
+
+v0.76 - 22Sep2016
+-----------------
+- Fixed sink connection issue when PD traffic causes CC status changes while in AttachedWait.SNK state.  (Google charger interop)
+- Added tCCDebounce delay after VBUS reaches vSafe0V before transitioning to Attached.SRC. (Ellisys TD.4.5.4)
+- Fixed math error in power and current calculation during source capabilities evaluation.
+
+
+v0.75 - 14Sep2016
+-----------------
+- Added support for negative voltage transitions.
+- Changed polling rate from 2ms to 1ms to improve discharge accuracy.
+- Fixed reporting of source current advertisement after SRC->SNK power role swap.
+- Enable bleed discharge after SRC->SNK power role swap to ensure timely discharge of VBUS bulk cap upon disconnect.
+
+
+v0.74 - 13Sep2016
+-----------------
+- Enable Rx of SOP'/SOP" based on power role and VCONN source status.
+- Auto accept power role swap to sink only if not externally powered.
+
+
+v0.73 - 01Sep2016
+-----------------
+- Modified driver probe error cleanup.
+- Moved debug string arrays to ROM.
+- Cleared PD header data role bit if not SOP pkt.
+
+
+v0.72 - 29Aug2016
+-----------------
+- Modified tusb422_start_timer() to use hrtimer_cancel() instead of hrtimer_try_to_cancel() and clear timer_expired flag.
+- Fixed race condition where VBUS could be enabled before tCCDebounce timeout for Ellisys TD 4.5.2.
+
+
+v0.71 - 26Aug2016
+-----------------
+- Modifications to make source code common with MCU code.
+
+
+v0.70 - 25Aug2016
+-----------------
+- Fixed failure to enter Attached.SNK state when CC pin bounces open less for than tPDDebounce after Rp is detected and before the tCCDebounce is completed.

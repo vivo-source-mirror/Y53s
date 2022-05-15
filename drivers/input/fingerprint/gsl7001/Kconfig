@@ -1,0 +1,9 @@
+#
+# Silead Fingerprint driver configuration
+#
+ 
+config BBK_GSL7001
+	tristate "SILEAD OEM fingerprint BBK_GSL7001 support"
+	default n
+	help
+	  This supports Silead spi Fingerprint drivers.

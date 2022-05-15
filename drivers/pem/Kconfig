@@ -1,0 +1,28 @@
+#
+# Cpufreq Pem Drivers
+#
+
+comment "Pem Drivers"
+
+config CONFIG_PEM_DRIVERS
+	tristate "pem driver set"
+	default m
+	help
+	  Pem Drivers, For Cpulimit!
+
+config VIVO_BINDER_SPACE
+	bool "Android Binder async proc free space"
+	default y
+	---help---
+	  This feature allows to get asycn proc binder free memory .
+
+	  To check the allocation and free of binder buffers
+	  exhaustively with combinations of various buffer sizes and
+	  alignments.
+
+config PEM_NET_REQUEST
+	bool "Statistics network sync times"
+	default n
+	---help---
+	  App network request statistics, statistics network sync times
+

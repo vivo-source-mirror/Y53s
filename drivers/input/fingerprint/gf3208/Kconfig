@@ -1,0 +1,5 @@
+config BBK_GF3208
+  tristate "GOODIX OEM fingerprint BBK_GF3208 support"
+  default n
+  help
+    Goodix Fingerprint chip GF516/GF318/GF316M/GF5116M/GF5216C/GF616M/GF318M TEE driver

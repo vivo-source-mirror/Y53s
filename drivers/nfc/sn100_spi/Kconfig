@@ -1,0 +1,3 @@
+config SN100_SPI
+	bool "sn100 NFC spi clk control"
+	default n

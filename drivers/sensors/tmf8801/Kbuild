@@ -1,0 +1,4 @@
+EXTRA_CFLAGS := -I$(src)/include
+EXTRA_CFLAGS += -Wno-unused-function
+obj-$(CONFIG_SENSORS_TMF8801) += tmf8801.o
+tmf8801-y += tof8801_driver.o tof8801_bootloader.o tof_hex_interpreter.o tof8801_app0.o

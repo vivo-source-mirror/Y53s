@@ -1,0 +1,9 @@
+#
+# Touchscreen driver configuration
+#
+config VIVO_TS
+       tristate "vivo touchscreen driver"
+       default y
+       help
+           Say Y here if you have vivo touchscreen driver.
+           If unsure, say N.

@@ -1,0 +1,77 @@
+    fan53870_pmic:onsemi,ldo@35 {
+        compatible = "onsemi,fan53870";
+        reg = <0x35>;
+	
+	fan53870,irq = <&pio 14 0>;
+	fan53870,reset = <&pio 122 0>;
+	fan53870,init-settings = <0x13 0x9a>,<0x14 0x05>;
+	
+        fan53870_l1:onsemi,fan53870@0{
+            offset = /bits/ 16 <0x0000>;
+            regulator-name ="fan53870_l1";
+            regulator-min-microvolt = <528000>;
+            regulator-max-microvolt = <1504000>;
+            min-dropout-voltage = <225000>;
+            iout_ua = <650000>;
+         };
+
+
+        fan53870_l2:onsemi,fan53870@1{
+            offset = /bits/ 16 <0x0001>;
+            regulator-name ="fan53870_l2";
+            regulator-min-microvolt = <528000>;
+            regulator-max-microvolt = <1504000>;
+            min-dropout-voltage = <225000>;
+            iout_ua = <650000>;
+        };
+
+
+        fan53870_l3:onsemi,fan53870@2{
+            offset = /bits/ 16 <0x0002>;
+            regulator-name ="fan53870_l3";
+            regulator-min-microvolt = <1500000>;
+            regulator-max-microvolt = <3400000>;
+            min-dropout-voltage = <200000>;
+            iout_ua = <650000>;
+        };
+
+
+        fan53870_l4:onsemi,fan53870@3{
+            offset = /bits/ 16 <0x0003>;
+            regulator-name ="fan53870_l4";
+            regulator-min-microvolt = <1500000>;
+            regulator-max-microvolt = <3400000>;
+            min-dropout-voltage = <200000>;
+            iout_ua = <650000>;
+         };
+
+
+        fan53870_l5:onsemi,fan53870@4{
+            offset = /bits/ 16 <0x0004>;
+            regulator-name ="fan53870_l5";
+            regulator-min-microvolt = <1500000>;
+            regulator-max-microvolt = <3400000>;
+            min-dropout-voltage = <300000>;
+            iout_ua = <650000>;
+        };
+
+
+        fan53870_l6:onsemi,fan53870@5{
+            offset = /bits/ 16 <0x0005>;
+            regulator-name ="fan53870_l6";
+            regulator-min-microvolt = <1500000>;
+            regulator-max-microvolt = <3400000>;
+            min-dropout-voltage = <300000>;
+            iout_ua = <650000>;
+        };
+
+
+        fan53870_l7:onsemi,fan53870@6{
+            offset = /bits/ 16 <0x0006>;
+            regulator-name ="fan53870_l7";
+            regulator-min-microvolt = <1500000>;
+            regulator-max-microvolt = <3400000>;
+            min-dropout-voltage = <300000>;
+            iout_ua = <650000>;
+        };
+    };

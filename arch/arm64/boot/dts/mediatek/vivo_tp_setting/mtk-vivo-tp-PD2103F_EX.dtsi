@@ -1,0 +1,187 @@
+/*********************touch screen config *************************/
+&touchscreencfg { /* vivo ts configure */
+	tp_module1 {
+		compatible = "vivo,touch-panel-module";
+		vts-ic-number=<81>;
+		vts-type=<0>;
+		vts-lcmid=<48>;
+		vts-dimention-x=<1080>;
+		vts-dimention-y=<2408>;
+		vts-tx-sensors=<18>;
+		vts-rx-sensors=<32>;
+		vts-gesture=<1>;
+		vts-incell=<1>;
+		vts-need-caliberation=<0>;
+		vts-virtual-proximinity=<0>;
+		vts-long-press=<0>;
+		vts-module-vendor=<0xF0>;
+		vts-no-flash=<1>;
+		vts-game-mode=<1>;
+		vts-game-idle-time=<10>;
+		vts-report-timestamp=<1>;
+	};
+
+	tp_module2 {
+		compatible = "vivo,touch-panel-module";
+		vts-ic-number=<81>;
+		vts-type=<0>;
+		vts-lcmid=<18>;		//1211724
+		vts-dimention-x=<1080>;
+		vts-dimention-y=<2408>;
+		vts-tx-sensors=<16>;
+		vts-rx-sensors=<36>;
+		vts-gesture=<1>;
+		vts-incell=<1>;
+		vts-need-caliberation=<0>;
+		vts-virtual-proximinity=<0>;
+		vts-long-press=<0>;
+		vts-module-vendor=<0xF0>;
+		vts-no-flash=<1>;
+		vts-game-mode=<1>;
+		vts-game-idle-time=<10>;
+		vts-report-timestamp=<1>;
+	};
+
+	tp_module3 {
+		compatible = "vivo,touch-panel-module";
+		vts-ic-number=<36>;
+		vts-type=<0>;
+		vts-lcmid=<65>;		//1211710
+		vts-dimention-x=<1080>;
+		vts-dimention-y=<2408>;
+		vts-tx-sensors=<16>;
+		vts-rx-sensors=<36>;
+		vts-gesture=<1>;
+		vts-incell=<1>;
+		vts-need-caliberation=<0>;
+		vts-virtual-proximinity=<0>;
+		vts-long-press=<0>;
+		vts-module-vendor=<0xF0>;
+		vts-no-flash=<1>;
+		vts-game-mode=<1>;
+		vts-game-idle-time=<10>;
+		vts-report-timestamp=<1>;
+	};
+};
+
+&pio {
+	spi_driving_set_cfg:spi_driving_set { 
+		pins_cmd_dat { 
+			pinmux = <PINMUX_GPIO25__FUNC_SPI2_CSB>,
+					<PINMUX_GPIO28__FUNC_SPI2_MI>,
+					<PINMUX_GPIO26__FUNC_SPI2_MO>;
+			drive-strength = <2>; //0:2mA 1:4mA 2:6mA 3:8mA 4:10mA 5:12mA 6:14mA 7:16mA
+		}; 
+	};
+
+	clk_driving_set_cfg:clk_driving_set {
+		pins_cmd_dat {
+			pinmux = <PINMUX_GPIO27__FUNC_SPI2_CLK>;
+			drive-strength = <3>; //0:2mA 1:4mA 2:6mA 3:8mA 4:10mA 5:12mA 6:14mA 7:16mA
+		};
+	};
+};
+
+&spi2 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	pinctrl-names ="default";
+	pinctrl-0 = <&spi_driving_set_cfg &clk_driving_set_cfg>;
+
+	vts_device@0 {
+		compatible = "vivo,ts-spi";
+		status = "okay";
+		reg=<0>;
+		spi-max-frequency = <4800000>;
+
+		mediatek,kthread-rt = <1>;
+		nt36672 {
+			compatible = "novatek,NVT-ts-spi-v2";
+			status = "ok";
+
+			vts-type=<0>;
+			vts-ic-number=<81>;
+			spi-max-frequency = <9600000>;	//4800000,9600000,15000000,19200000
+			novatek,reset-gpio = <&pio 23 0x00>;
+			novatek,irq-gpio = <&pio 1 0x2001>;
+			//novatek,cs-gpio = <&pio 98 0x00>;
+			//novatek,miso-gpio = <&pio 12 0x00>;
+			sensor-test-key="com.nttouchscreen.mptest:MainActivity:android.intent.action.novatek:0:testResult";
+			lcm-noise-test-key="com.nt36xxxtouchscreen.deltadiff:MainActivity:null:null:null";
+			rawdata-test-key="com.nttouchscreen.getdata:MainActivity:null:null:null";
+			rf-noise-test-key="com.nt36xxxtouchscreen.deltadiff:BspTest:android.intent.action.nvtdeltadiff:0:testResult";
+
+			novatek,swrst-n8-addr = <0x03F0FE>;
+			//vts-incell-panel = <&dsi_nt36675_tm_fhdplus_video &dsi_ft8756_truly_fhdplus_video &dsi_nt36672c_tm657_dsc_fhdplus_video>;
+		};
+
+		ili9881h {
+			compatible = "ilitek,ILI-ts-spi-v2";
+			status = "ok";
+			vts-type=<0>;
+			vts-ic-number=<90>;
+			spi-max-frequency = <9600000>;	//4800000,9600000,15000000,19200000
+			ilitek,reset-gpio = <&pio 23 0x00>;
+			ilitek,irq-gpio = <&pio 1 0x02>;
+
+			sensor-test-key="com.ilitek.touchscreen.tptest:MainActivity:com.ilitek.touchscreen.action.tptest:0:ILITEK_TpTestResult";
+			lcm-noise-test-key="com.ilitek.touchscreen.noisev2:MainActivity:null:null:null"; 
+			rawdata-test-key="com.ilitek.touchscreen.noisev2:DataShowActivity:null:null:null";
+			rf-noise-test-key="com.ilitek.touchscreen.noisev2:BspTestActivity:com.ilitek.touchscreen.action.noisetest:0:ILITEK_TpTestResult";
+			
+		};
+
+		ft8656 {
+			compatible = "focaltech,ft8756_v2";
+			vts-type=<0>;
+			vts-ic-number=<39>;
+			spi-max-frequency = <6000000>;	//4800000,9600000,15000000,19200000
+			focaltech,reset-gpio = <&pio 23 0x00>;
+			focaltech,irq-gpio = <&pio 1 0x02>;
+			focaltech,max-touch-number = <10>;
+			focaltech,display-coords = <0 0 720 1600>;
+			//focaltech,ic_name = "ft8016";//DEFAULT 8756
+			sensor-test-key="com.focaltouchscreen.sensortest:MainActivity:com.focaltouchscreen.sensortest:0:focal_test_result";
+			lcm-noise-test-key="com.focaltech.deltadiff:MainActivity:null:null:null";
+			rawdata-test-key="com.focaltech.deltadiff:DataActivity:null:null:null";
+			rf-noise-test-key="com.focaltech.deltadiff:BspTestActivity:com.focaltech.deltadiff:0:testResult";
+			//vts-incell-panel=<&dsi_pd2034_auo_ft8016_hdplus_video>;
+		};
+
+		ili_9882n {
+			status = "okay";
+			compatible = "tchip,ilitek";
+			vts-type=<0>;
+			vts-ic-number=<91>;
+			spi-max-frequency = <9600000>;
+			touch,reset-gpio = <&pio 23 0x00>;
+			touch,irq-gpio = <&pio 1 0x02>;
+
+			sensor-test-key="com.ilitek.touchscreen.tptest3X:MP3XActivity:com.ilitek.touchscreen.action.tptest:0:ILITEK_TpTestResult";
+			lcm-noise-test-key="com.ilitek.touchscreen.noisev2:MainActivity:null:null:null"; 
+			rawdata-test-key="com.ilitek.touchscreen.noisev2:DataShowActivity:null:null:null";
+			rf-noise-test-key="com.ilitek.touchscreen.noisev2:BspTestActivity:com.ilitek.touchscreen.action.noisetest:0:ILITEK_TpTestResult";
+			//vts-incell-panel=<&dsi_pd2034_tm_ili9882n_hdplus_video>;
+		};
+
+		ft8719 {
+			compatible = "focaltech,ft8719_v2";
+			status = "okay";
+
+			vts-type=<0>;
+			vts-ic-number=<36>;
+			spi-max-frequency = <6000000>;	//4800000,9600000,15000000,19200000
+			focaltech,reset-gpio = <&pio 23 0x00>;
+			focaltech,irq-gpio = <&pio 1 0x02>;
+			//focaltech,cs-gpio = <&pio 21 0x00>;
+			focaltech,max-touch-number = <10>;
+			focaltech,display-coords = <0 0 1080 2408>;
+
+			sensor-test-key="com.focaltouchscreen.sensortest:MainActivity:com.focaltouchscreen.sensortest:0:focal_test_result";
+			lcm-noise-test-key="com.focaltech.deltadiff:MainActivity:null:null:null";
+			rawdata-test-key="com.focaltech.deltadiff:DataActivity:null:null:null";
+			rf-noise-test-key="com.focaltech.deltadiff:BspTestActivity:com.focaltech.deltadiff:0:testResult";
+		};
+	};
+};
+

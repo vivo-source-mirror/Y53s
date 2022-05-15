@@ -1,0 +1,70 @@
+&i2c0 {
+	status = "okay";
+	#address-cells = <1>;
+	#size-cells = <0>;
+	clock-frequency = <400000>;
+	mediatek,use-open-drain;
+	touchscreen@20 {
+		compatible = "synaptics,synaptics-3706";
+		reg = <0x20>;
+		//vcc_i2c-supply = <&l39_reg>;
+		avdd_pwr-supply = <&mt_pmic_vtp_ldo_reg>;
+		interrupt-parent = <&pio>;
+		interrupts = <21 IRQ_TYPE_EDGE_FALLING 21 0>;
+		//pinctrl-names = "default", "ts_active", "ts_suspend";
+		//pinctrl-0 = <&tp_int &tp_rst>;
+		//pinctrl-1 = <&tp_iovcc_active>;
+		//pinctrl-2 = <&tp_iovcc_suspend>;
+		/* pins used by touchscreen */
+		synaptics,reset-gpio = <&pio 20 0x0>; 
+		synaptics,irq-gpio = <&pio 21 0x2>;
+		synaptics,iovcc-gpio = <&pio 190 0x0>;
+		synaptics,attn_polarity = <0x02>;
+	
+		udg-reg-control=<0x67>;
+		udg-reg-signature-write=<0x6a>;
+	
+		ts-dimension-by-lcm=<1>;
+		ts-suspend-resume=<0>;
+	
+		lcd-dimension-x=<1080>;
+		lcd-dimension-y=<2340>;
+	
+		ts-dimension-x=<1080>;
+		ts-dimension-y=<2340>;
+	
+		ts-dclick-trip-x-area=<140>;
+		ts-dclick-trip-y-area=<200>;
+		ts-dclick-two-fingers-x-area=<200>;
+		ts-dclick-two-fingers-y-area=<190>;
+	
+		ts-fixed-key-type=<0>; /*0=0d,1=2d */
+	
+		//add for 3706
+		synaptics,irq-on-state = <0>;
+		synaptics,reset-on-state = <0>;
+		synaptics,power-delay-ms = <200>;
+		synaptics,reset-delay-ms = <100>;
+		synaptics,reset-active-ms = <20>;
+		synaptics,ub-i2c-addr = <0x2c>;
+		synaptics,power-on-state = <1>;
+	};
+};
+
+&touchscreencfg { 
+	   compatible = "vivo,touchscreen-config";
+	   vivo,ts-product-name="PD1938";	   
+       vivo,use-ic-list="S3706";   
+
+	   vivo,ts-gloves-mode=<0>;
+	   vivo,ts-large-obj-suppression=<1>;
+	   vivo,ts-dclick-wake=<1>;
+	   vivo,ts-gesture-mode=<1>; 
+	   vivo,ts-custom-gesture=<0>;
+	   vivo,ts-module-id-methods=<2>;
+	   vivo,ts-fw-upgrade-lcd-referrence=<0>;
+	   vivo,ts-anti-esd=<1>;
+	   vivo,ts-charger-conn-judge=<1>;
+	   vivo,ts-module-smt-mode=<1>; 
+	   status = "okay";
+	};

@@ -1,0 +1,4 @@
+menu "SOC (System On Chip) specific Drivers"
+
+source "drivers/misc/vivo_vibcam/src/Kconfig"
+endmenu

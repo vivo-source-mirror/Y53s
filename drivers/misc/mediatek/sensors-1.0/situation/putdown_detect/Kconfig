@@ -1,0 +1,7 @@
+
+config MTK_PUTDOWN_DETECT_HUB
+	bool "putdown detect hub for MediaTek package"
+	default n
+	help
+	  A putdown detect is a device, usually portable
+	  and electronic or electromechanical, that detect device's putdown.

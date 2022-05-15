@@ -1,0 +1,29 @@
+config HALL_MXM1120_UP
+        bool "Support for hall sensor"
+        help
+          This option enabled support for the Hall sensors.
+          Say Y to enabled these.
+
+config HALL_MXM1120_DOWN
+        bool "Support for hall sensor"
+        help
+          This option enabled support for the Hall sensors.
+          Say Y to enabled these.
+
+config VIVO_VIB8846
+        bool "Support for ccm vibrator"
+        help
+          This option enabled support for the ccm vibrator.
+          Say Y to enabled these.
+
+config HALL_IST8801_UP
+        bool "Support for hall sensor"
+        help
+          This option enabled support for the Hall sensors.
+          Say Y to enabled these.
+
+config HALL_IST8801_DOWN
+        bool "Support for hall sensor"
+        help
+          This option enabled support for the Hall sensors.
+          Say Y to enabled these.

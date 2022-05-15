@@ -1,0 +1,12 @@
+#obj-$(CONFIG_DUAL_ROLE_USB_INTF)	+= class-dual-role.o
+obj-$(CONFIG_TUSB422)	+= tusb422_tcpci.o
+obj-$(CONFIG_TUSB422)	+= tusb422_tcpm.o
+obj-$(CONFIG_TUSB422)	+= tusb422.o
+obj-$(CONFIG_TUSB422)	+= tusb422_common.o
+obj-$(CONFIG_TUSB422)	+= tusb422_linux.o
+obj-$(CONFIG_TUSB422)	+= tusb422_linux_dual_role.o
+obj-$(CONFIG_TUSB422)	+= usb_pd_policy_engine.o
+obj-$(CONFIG_TUSB422)	+= usb_pd_policy_manager.o
+obj-$(CONFIG_TUSB422)	+= usb_pd_protocol.o
+obj-$(CONFIG_TUSB422)	+= tusb422_notify.o
+obj-$(CONFIG_TUSB422_PAL)	+= usb_pd_pal.o

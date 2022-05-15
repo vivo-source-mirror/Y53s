@@ -1,0 +1,9 @@
+
+config MTK_WINDOW_ORIENTATION_HUB
+	bool "window orientation hub for MediaTek package"
+	default n
+	help
+	  A window orientation is a device,
+	  usually portable and
+	  electronic or electromechanical,
+	  that detect window's orientation.

@@ -1,0 +1,69 @@
+v3.0.2.0
+[New features]
+1. Add Delta C noise (noise peak to peak 3 frame case)
+2. Register pm suspend/resume in dev_pm_ops
+3. Gesture 增加手勢開關
+4. 增加debug lite格式，加速get frame rate
+5. short test 與open C 公式修改
+6. 為整機打ESD需求,暫時加入支援9882系列IC
+7. 計算HW CRC, 必須在Load Code前下DMA Reset(only 9881X)
+8. 需要統一規定reset後10ms才能進入ICE[9882H/82N/81T/83A/7807V]
+9. 修改寫Dummy是否成功來判斷是否註冊Probe成功
+10. add judgment method in node returns core version to apk
+11. modify mp fail retry method
+12. add ilitek_tddi_ic_func_ctrl_reset case
+13. cmd's definition of AP and MP interruption time out needs to be different
+14. modify ili_touch_esd_gesture_iram()，add retry check case when enter ICE mode
+15. Modify 9882H / 9882N / 7807V MP Open & Short formula
+
+[Improvements]
+1. 因為MP APK，修改ioctl node中的ICE_MODE_SWITCH
+2. change polling PM status method to wait_for_completion_timeout
+3. 修正Load Gesture Code流程
+4. modify FW_TDDI_TRUNK_FB.ili path
+5. spi_sync fail no need to recovery
+6. set default gesture disable
+7. set default SPI clock 8M HZ
+8. Change variable xfer from global to local in ili_spi_write_then_read_split
+9. Modify the method of declaring variables in open_test_sp and open_test_cap
+10. modify TP_RECORD_DATA define
+11. modify struct ili_demo_debug_info_id0 for oppo
+12. The space allocation of the two-dimensional index in the code is incorrect
+13. remove gpio_request INT/RST in MTK platform
+14. SPI開機升級判斷不要只用開機升級的宏開關來控制
+15. modify mp ini parser read file size method
+16. ic_get_info時僅打印CHIP PID前六碼，取消顯示IC version
+
+[Bug fixed]
+1. WRAPPER_RW case buffer length in ioctl node
+2. PC tool read the format of mp csv file
+3. ili_spi_write_then_read_split read error length
+4. Interrupts are not enabled after upgrading firmware using DDI 
+5. ESD 密碼位置修改	
+6. SPI/I2C UART資料長度錯誤
+7. Host down load 搬code，code 長度不滿足4 alignment, 補0xFF 防呆 (Gesture code 有機會不滿足4 alignment) , 以及確認燒入iram正確性 , CRC 檢查修正
+8. ili_fw_uart_ctrl() u8不會<0
+9. 9881x reset key
+10. 9881X/7807Q/9882H不需要 otp_check 流程防護
+11. 9881X 後的IC, 進ICE不需設定WDT
+12. 在讀取Flash前必須將RX_DUAL關掉
+13. 在進ICE Mode設定CS 為High, 防止Load Code被中斷時, CS Keep 在Low的 Issue(I2C)
+14. ili_ic_get_pc_counter是使用停MCU的，請改成不停MCU的
+15. remove (n_tx > SPI_TX_BUF_SIZE) judgment in ilitek_spi_write_then_read_split/ilitek_spi_write_then_read_direct
+16. set iram_crc initial value in ilitek_tddi_fw_iram_upgrade
+17. fix mp_do_retry only retry once
+18. show_delta_data and show_raw_data of node case(cmd B7 01/02) SPI slave read no wait interrupt
+19. Modify the timing of mutex use in spi esd recovery flow
+20. Fix the data space of show delta & show rawdata is incorrectly written
+21. cat /proc/ilitek/debug_message will reboot when debug_message is close
+22. pre-command does not need to check interrupt
+
+v3.0.1.0
+[New features]
+1. Supports ILI9881N series IC.
+2. Supports 64K and 80K iram program.
+3. Support IC's SPI slave.
+
+[Improvements]
+
+[Bug fixed]

@@ -1,0 +1,19 @@
+menu "BBK Driver Info class support"
+config BBK_INFO
+	tristate "BBK Info class config"
+	help
+	  Say Y here to enable driver info class support.
+if BBK_INFO
+
+config BBK_DRIVER_INFO
+	tristate "GPIO Driver Info"
+	help
+	  Say Y here to enable bbk driver info interface.
+
+config BBK_CARD_DETECT
+	tristate "GPIO Driver Info"
+	help
+	  Say Y here to enable bbk driver info interface.
+endif # SWITCH
+
+endmenu

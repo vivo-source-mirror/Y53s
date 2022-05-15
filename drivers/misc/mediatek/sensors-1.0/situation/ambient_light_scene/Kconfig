@@ -1,0 +1,9 @@
+
+config MTK_AMBIENT_LIGHT_SCENE_HUB
+	bool "ambient light scene for MediaTek package"
+	default n
+	help
+	  A ambient light scene is a device,
+	  usually portable and
+	  electronic or electromechanical,
+	  that detect ambient light status.

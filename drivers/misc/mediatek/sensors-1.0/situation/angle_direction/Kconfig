@@ -1,0 +1,9 @@
+
+config MTK_ANGLE_DIRECTION_HUB
+	bool "angle direction hub for MediaTek package"
+	default n
+	help
+	  A angle direction is a device,
+	  usually portable and
+	  electronic or electromechanical,
+	  that detect device's orientation.

@@ -1,0 +1,6 @@
+config NFC_SN100
+	tristate "QTI NCI based NFC Controller Driver for SN100x"
+	depends on I2C
+	help
+	  NXP SN100 core driver.
+	  This driver provides core functionality for NXP SN100 NFC devices.

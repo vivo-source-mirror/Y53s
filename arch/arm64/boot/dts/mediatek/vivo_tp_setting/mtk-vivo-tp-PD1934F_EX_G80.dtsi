@@ -1,0 +1,132 @@
+/* Copyright (c) 2014-2015, The Linux Foundation. All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 and
+ * only version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+&touchscreencfg{
+
+	tp_module1 {
+		compatible = "vivo,touch-panel-module";
+		vts-ic-number=<36>;
+		vts-type=<0>;
+		vts-lcmid=<65>;
+		vts-dimention-x=<1080>;
+		vts-dimention-y=<2340>;
+		vts-tx-sensors=<16>;
+		vts-rx-sensors=<36>;
+		vts-incell=<1>;
+		vts-need-caliberation=<0>;
+		vts-virtual-proximinity=<0>;
+		vts-long-press=<0>;
+		vts-module-vendor=<0xF0>;
+		vts-no-flash=<1>;
+	};
+
+	tp_module2 {
+		compatible = "vivo,touch-panel-module";
+		vts-ic-number=<81>;
+		vts-type=<0>;
+		vts-lcmid=<17>;
+		vts-dimention-x=<1080>;
+		vts-dimention-y=<2340>;
+		vts-tx-sensors=<16>;
+		vts-rx-sensors=<36>;
+		vts-incell=<1>;
+		vts-need-caliberation=<0>;
+		vts-virtual-proximinity=<0>;
+		vts-long-press=<0>;
+		vts-module-vendor=<0xF0>;
+		vts-no-flash=<1>;
+	};
+
+	tp_module3 {
+		compatible = "vivo,touch-panel-module";
+		vts-ic-number=<36>;
+		vts-type=<0>;
+		vts-lcmid=<1>;
+		vts-dimention-x=<1080>;
+		vts-dimention-y=<2340>;
+		vts-tx-sensors=<16>;
+		vts-rx-sensors=<36>;
+		vts-incell=<1>;
+		vts-need-caliberation=<0>;
+		vts-virtual-proximinity=<0>;
+		vts-long-press=<0>;
+		vts-module-vendor=<0xF0>;
+		vts-no-flash=<1>;
+	};
+};
+&pio {
+	spi_driving_set_cfg:spi_driving_set { 
+		pins_cmd_dat { 
+			pinmux = <PINMUX_GPIO25__FUNC_SPI2_CSB>,
+					<PINMUX_GPIO27__FUNC_SPI2_CLK>,
+					<PINMUX_GPIO28__FUNC_SPI2_MI>,
+					<PINMUX_GPIO26__FUNC_SPI2_MO>;
+			drive-strength = <2>; //0:2mA 1:4mA 2:6mA 3:8mA 4:10mA 5:12mA 6:14mA 7:16mA
+		}; 
+	};		
+}; 
+ 
+&spi2 {
+	status = "okay";	
+	
+	vts_device@0 {
+		compatible = "vivo,ts-spi";
+		status = "okay";
+		reg=<0>;
+		spi-max-frequency = <4800000>;		
+		
+		pinctrl-names ="default";
+		pinctrl-0 = <&spi_driving_set_cfg>;
+		
+		nt36672 {
+			compatible = "novatek,NVT-ts-spi-v2";
+			status = "ok";		
+			
+			vts-type=<0>;
+			vts-ic-number=<81>;						
+			
+			spi-max-frequency = <9600000>;	//4800000,9600000,15000000,19200000
+			//novatek,reset-gpio = <&pio 23 0x00>;
+			novatek,irq-gpio = <&pio 1 0x2001>;
+			//novatek,cs-gpio = <&pio 25 0x00>;
+		
+			sensor-test-key="com.nttouchscreen.mptest:MainActivity:android.intent.action.novatek:0:testResult";
+			lcm-noise-test-key="com.nt36xxxtouchscreen.deltadiff:MainActivity:null:null:null";
+			rawdata-test-key="com.nttouchscreen.getdata:MainActivity:null:null:null";
+			rf-noise-test-key="com.nt36xxxtouchscreen.deltadiff:BspTest:android.intent.action.nvtdeltadiff:0:testResult";
+			
+			/* 672 */
+			//novatek,swrst-n8-addr = <0x01F01A>;
+
+			/* 672A */
+			novatek,swrst-n8-addr = <0x03F0FE>;			
+		};
+
+		ft8719 {
+			compatible = "focaltech,ft8719_v2";
+			vts-type=<0>;
+			vts-ic-number=<36>;
+			spi-max-frequency = <8000000>;	//4800000,9600000,15000000,19200000
+			focaltech,reset-gpio = <&pio 23 0x00>;
+			focaltech,irq-gpio = <&pio 1 0x02>;
+			//focaltech,cs-gpio = <&pio 25 0x00>;
+			focaltech,max-touch-number = <10>;
+			focaltech,display-coords = <0 0 1080 2340>;
+
+			sensor-test-key="com.focaltouchscreen.sensortest:MainActivity:com.focaltouchscreen.sensortest:0:focal_test_result";
+			lcm-noise-test-key="com.focaltech.deltadiff:MainActivity:null:null:null";
+			rawdata-test-key="com.focaltech.deltadiff:DataActivity:null:null:null";
+			rf-noise-test-key="com.focaltech.deltadiff:BspTestActivity:com.focaltech.deltadiff:0:testResult";			
+		};	
+	};
+	
+
+};

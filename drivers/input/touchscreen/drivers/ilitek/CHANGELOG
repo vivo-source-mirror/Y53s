@@ -1,0 +1,6 @@
+* v2.0.0.0
+- Optimise software structure of TP driver based on v1.x.
+- SPI Transfer 64k once (on x20).
+- Device node with dumping iram/flash data.
+- Update compat_ioctl.
+- Fix bugs

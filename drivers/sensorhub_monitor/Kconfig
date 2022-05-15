@@ -1,0 +1,4 @@
+config SENSOR_HUB_MONITOR
+	bool "SensorHub Monitor Support"
+	help
+	  Add support for sensor hub monitor driver.
